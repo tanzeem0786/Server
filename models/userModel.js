@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 
-const userSchema = new mongoose.Schema( {
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
         trim: true,
-    }, 
+    },
     email: {
         type: String,
         required: true,
@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema( {
         enum: ["Admin", "User"],
         default: "User",
     },
-    accountVerified : {
+    accountVerified: {
         type: Boolean,
         default: false,
     },
@@ -33,7 +33,7 @@ const userSchema = new mongoose.Schema( {
             },
             returned: {
                 type: Boolean,
-                default: false, 
+                default: false,
             },
             bookTitle: String,
             borrowedDate: Date,
@@ -49,9 +49,23 @@ const userSchema = new mongoose.Schema( {
     resetPasswordToken: String,
     resetPasswordExpire: Date,
 },
-{
-    timestamps: true,
-}
+    {
+        timestamps: true,
+    }
 );
+
+userSchema.methods.getVerificationCode = () => {
+    const generateRandomFiveDigits = () => {
+        const firstDigit = Math.floor(Math.random() * 9) + 1;
+        const remainingDigits = Math.floor(Math.random() * 10000).toString().padStart(4, 0);
+        return parseInt(firstDigit + remainingDigits);
+    }
+
+            /*CONST VERIFICATIONCODE LIKHNE PR ERROR AA RHA H */ 
+         verificationCode = generateRandomFiveDigits();
+        this.verificationCode = verificationCode;
+        this.verificationCodeExpire = Date.now() + 15 * 60 * 1000;
+        return verificationCode;
+};
 
 export const User = mongoose.model("User", userSchema);
